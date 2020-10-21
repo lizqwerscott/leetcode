@@ -18,11 +18,11 @@ int numberDigits(int number);
 
 int endDigit(int digit);
 
-int findNextPalindrom(int now);
+bool isPrime(int n);
+int findNextPalindromP(int now);
 
 std::vector<int> createPalindroms(int start, int digit);
 
-bool isPrime(int n);
 bool isPalindrome(int n);
 
 int primePalindrome(int N);
@@ -34,21 +34,20 @@ int main(int argc, char *argv[])
   } else {
     printf("No\n");
   }
-  /*
   while (true) {
     char number[100];
     std::cout << "Please input Number:";
     std::cin >> number;
     printf("result:%d\n", primePalindrome(strToInt(number))); 
   }
-  */
   clock_t startT1, endT1;
   clock_t startT2, endT2;
   startT1 = clock();
   int ppe = primePalindrome(9989900); 
   endT1 = clock();
+  //100111001
   startT2 = clock();
-  bool isP = isPrime(100111001);
+  bool isP = isPrime(9999999);
   int i = 0;
   if (isP) {
     i = 1;
@@ -74,23 +73,46 @@ int endDigit(int digit) {
   return strToInt(end);
 }
 
-int findNextPalindrom(int now) {
+bool isPrime(int n) {
+  if (n <= 3) {
+    return n > 1;
+  }
+
+  if (n % 6 != 1 && n % 6 != 5) {
+    return false;
+  }
+  int sqrtN = (int)sqrt(n);
+  for (int i = 5; i < sqrtN; i += 6) {
+    if (n % i ==0 || n % (i + 2) == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+int findNextPalindromP(int now) {
   int digit = numberDigits(now);
   int digitEnd = endDigit(digit); 
   if (digit == 1) {
     if (now == 9) {
       return 11;
     } else {
-      return now + 1;
+      for (int i = now; i < 9; i++) {
+        if (isPrime(i)) {
+          return i;
+        }
+      }
+      return findNextPalindromP(10);
     }
+  }
+  if (now == digitEnd) {
+    printf("HHH\n");
+    return findNextPalindromP(now + 1);
   }
   int creatN = digit / 2;
   int result = 0;
   int last = pow(10, creatN - 1);
   int endNum = endDigit(creatN);
-  if (now == digitEnd) {
-    return findNextPalindrom(now + 1);
-  }
   for (int i = last; i <= endNum; i++) {
     if (digit % 2 == 0) {
       std::string z = std::to_string(i);
@@ -98,8 +120,11 @@ int findNextPalindrom(int now) {
       reverse(rz.begin(), rz.end());
       result = strToInt(z + rz);
       if (now < result) {
-        printf("FindNext:%d\n", result);
-        return result;
+        printf("FindNextO:%d\n", result);
+        if (isPrime(result)) {
+          printf("FindNextOF:%d\n", result);
+          return result;
+        }
       }
     } else {
       for (int j = 0; j <= 9; j++) {
@@ -109,13 +134,17 @@ int findNextPalindrom(int now) {
         std::string zj = std::to_string(j);
         result = strToInt(z + zj + rz);
         if (now < result) {
-          printf("FindNext:%d\n", result);
-          return result;
+          printf("FindNextJ:%d\n", result);
+          if (isPrime(result)) {
+            printf("FindNextJF:%d\n", result);
+            return result;
+          }
         }
       }
     }
   }
-  return result;
+  printf("digitEnd:%d\n", digitEnd);
+  return findNextPalindromP(result + 1);
 }
 
 std::vector<int> createPalindroms(int start, int digit) {
@@ -154,22 +183,6 @@ std::vector<int> createPalindroms(int start, int digit) {
   return result;
 }
 
-bool isPrime(int n) {
-  if (n <= 3) {
-    return n > 1;
-  }
-
-  if (n % 6 != 1 && n % 6 != 5) {
-    return false;
-  }
-  int sqrtN = (int)sqrt(n);
-  for (int i = 5; i < sqrtN; i += 6) {
-    if (n % i ==0 || n % (i + 2) == 0) {
-      return false;
-    }
-  }
-  return true;
-}
 
 bool isPalindrome(int n) {
   std::string z = std::to_string(n);
@@ -185,14 +198,14 @@ int primePalindrome(int N) {
   if (isPalindrome(i) && isPrime(i)) {
     return i;
   } else {
-    i = findNextPalindrom(i);
+    return findNextPalindromP(i);
   }
   while (true) {
     if (isPrime(i)) {
       result = i;
       break;
     }
-    i = findNextPalindrom(i);
+    i = findNextPalindromP(i);
   }
   return result;
 }
