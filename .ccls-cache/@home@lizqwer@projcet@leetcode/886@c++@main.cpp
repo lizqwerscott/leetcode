@@ -15,7 +15,7 @@ int strToInt(const std::string & string_temp) {
 
 int numberDigits(int number);
 
-std::vector<int> createPalindrom(int digit);
+std::vector<int> createPalindroms(int digit);
 
 std::vector<int> findPalindrome(int start);
 
@@ -23,7 +23,7 @@ int primePalindrome(int N);
 
 int main(int argc, char *argv[])
 {
-  std::vector<int> temp  = findPalindrome(10);
+  std::vector<int> temp  = findPalindrome(1);
   for (int i = 0; i < temp.size(); i++) {
     printf("Index:%d\n", temp[i]);
   }
@@ -37,9 +37,15 @@ int numberDigits(int number) {
   return str.size();
 }
 
-std::vector<int> createPalindrom(int digit) {
+std::vector<int> createPalindroms(int digit) {
   std::vector<int> result;
-  int creatN = digit / 2; 
+  if (digit == 1) {
+    for (int i = 0; i < 10; i++) {
+      result.push_back(i);
+    }
+    return result;
+  }
+  int creatN = digit / 2;
   std::string endstr = "";
   for (int i = 0; i < creatN; i++) {
     endstr.append("9");
@@ -65,7 +71,7 @@ std::vector<int> createPalindrom(int digit) {
 
 std::vector<int> findPalindrome(int start) {
   int digit = numberDigits(start);
-  return createPalindrom(digit);
+  return createPalindroms(digit);
 }
 
 
