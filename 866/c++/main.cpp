@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <ctime>
 
 int strToInt(const std::string & string_temp) {
   int int_temp = 0;
@@ -21,17 +22,41 @@ int findNextPalindrom(int now);
 
 std::vector<int> createPalindroms(int start, int digit);
 
-std::vector<int> findPalindrome(int start);
+bool isPrime(int n);
+bool isPalindrome(int n);
 
 int primePalindrome(int N);
 
 int main(int argc, char *argv[])
 {
-  std::vector<int> temp  = findPalindrome(22);
-  for (int i = 0; i < temp.size(); i++) {
-    printf("Index:%d\n", temp[i]);
+  if (isPrime(8)) {
+    printf("Prime\n"); 
+  } else {
+    printf("No\n");
   }
-  printf("result:%d\n", findNextPalindrom(8)); 
+  /*
+  while (true) {
+    char number[100];
+    std::cout << "Please input Number:";
+    std::cin >> number;
+    printf("result:%d\n", primePalindrome(strToInt(number))); 
+  }
+  */
+  clock_t startT1, endT1;
+  clock_t startT2, endT2;
+  startT1 = clock();
+  int ppe = primePalindrome(9989900); 
+  endT1 = clock();
+  startT2 = clock();
+  bool isP = isPrime(100111001);
+  int i = 0;
+  if (isP) {
+    i = 1;
+  }
+  endT2 = clock();
+
+  printf("result:%d, time:%fs\n", ppe, (double)(endT1 - startT1) / CLOCKS_PER_SEC);
+  printf("result:%d, time:%fs\n", i, (double)(endT2 - startT2) / CLOCKS_PER_SEC);
   printf("re:%d\n", numberDigits(10)); 
   return 0;
 }
@@ -72,7 +97,8 @@ int findNextPalindrom(int now) {
       std::string rz = z;
       reverse(rz.begin(), rz.end());
       result = strToInt(z + rz);
-      if (now <= result) {
+      if (now < result) {
+        printf("FindNext:%d\n", result);
         return result;
       }
     } else {
@@ -82,7 +108,8 @@ int findNextPalindrom(int now) {
         reverse(rz.begin(), z.begin());
         std::string zj = std::to_string(j);
         result = strToInt(z + zj + rz);
-        if (now <= result) {
+        if (now < result) {
+          printf("FindNext:%d\n", result);
           return result;
         }
       }
@@ -127,17 +154,45 @@ std::vector<int> createPalindroms(int start, int digit) {
   return result;
 }
 
-std::vector<int> findPalindrome(int start) {
-  int digit = numberDigits(start);
-  for (int i = start; i <)
+bool isPrime(int n) {
+  if (n <= 3) {
+    return n > 1;
+  }
+
+  if (n % 6 != 1 && n % 6 != 5) {
+    return false;
+  }
+  int sqrtN = (int)sqrt(n);
+  for (int i = 5; i < sqrtN; i += 6) {
+    if (n % i ==0 || n % (i + 2) == 0) {
+      return false;
+    }
+  }
+  return true;
 }
 
+bool isPalindrome(int n) {
+  std::string z = std::to_string(n);
+  std::string rz = z;
+  reverse(rz.begin(), rz.end());
+  return rz == z;
+}
 
 int primePalindrome(int N) {
   int result = N;
   //1 find the Palindrome number; then in Palindrome number list find the prime.
-
-  
-
+  int i = N;
+  if (isPalindrome(i) && isPrime(i)) {
+    return i;
+  } else {
+    i = findNextPalindrom(i);
+  }
+  while (true) {
+    if (isPrime(i)) {
+      result = i;
+      break;
+    }
+    i = findNextPalindrom(i);
+  }
   return result;
 }
