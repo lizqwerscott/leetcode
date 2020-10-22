@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     i = 1;
   }
   endT2 = clock();
-  int test_j_n = 1;
+  int test_j_n = 3;
   std::vector<int> test_j = createPalindroms(pow(10, test_j_n), test_j_n);
   printf("OThe Number is %d\n", number_ou);
   printf("JThe Number is %d\n", number_ju);
@@ -129,6 +129,9 @@ int findNextPalindromP(int now) {
   int last = pow(10, creatN - 1);
   int endNum = endDigit(creatN);
   for (int i = last; i <= endNum; i++) {
+    if (i % 2 == 0 && digit == 3) {
+      continue;
+    }
     if (digit % 2 == 0) {
       std::string z = std::to_string(i);
       std::string rz = z;
