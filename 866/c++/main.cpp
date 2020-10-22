@@ -7,6 +7,10 @@
 #include <algorithm>
 #include <ctime>
 
+
+int number_ou = 0;
+int number_ju = 0;
+
 int strToInt(const std::string & string_temp) {
   int int_temp = 0;
   std::stringstream stream(string_temp);
@@ -38,6 +42,9 @@ int main(int argc, char *argv[])
     char number[100];
     std::cout << "Please input Number:";
     std::cin >> number;
+    if (strToInt(number) == 0) {
+      break;
+    }
     printf("result:%d\n", primePalindrome(strToInt(number))); 
   }
   clock_t startT1, endT1;
@@ -53,6 +60,10 @@ int main(int argc, char *argv[])
     i = 1;
   }
   endT2 = clock();
+  int test_j_n = 1;
+  std::vector<int> test_j = createPalindroms(pow(10, test_j_n), test_j_n);
+  printf("OThe Number is %d\n", number_ou);
+  printf("JThe Number is %d\n", number_ju);
 
   printf("result:%d, time:%fs\n", ppe, (double)(endT1 - startT1) / CLOCKS_PER_SEC);
   printf("result:%d, time:%fs\n", i, (double)(endT2 - startT2) / CLOCKS_PER_SEC);
@@ -104,6 +115,10 @@ int findNextPalindromP(int now) {
       }
       return findNextPalindromP(10);
     }
+  } else {
+    if (digit != 2 && digit % 2 == 0) {
+      return findNextPalindromP(pow(10, digit));
+    }
   }
   if (now == digitEnd) {
     printf("HHH\n");
@@ -120,9 +135,9 @@ int findNextPalindromP(int now) {
       reverse(rz.begin(), rz.end());
       result = strToInt(z + rz);
       if (now < result) {
-        printf("FindNextO:%d\n", result);
+        //printf("FindNextO:%d\n", result);
         if (isPrime(result)) {
-          printf("FindNextOF:%d\n", result);
+          //printf("FindNextOF:%d\n", result);
           return result;
         }
       }
@@ -134,9 +149,9 @@ int findNextPalindromP(int now) {
         std::string zj = std::to_string(j);
         result = strToInt(z + zj + rz);
         if (now < result) {
-          printf("FindNextJ:%d\n", result);
+          //printf("FindNextJ:%d\n", result);
           if (isPrime(result)) {
-            printf("FindNextJF:%d\n", result);
+            //printf("FindNextJF:%d\n", result);
             return result;
           }
         }
@@ -162,13 +177,47 @@ std::vector<int> createPalindroms(int start, int digit) {
       std::string rz = z;
       reverse(rz.begin(), rz.end());
       result.push_back(strToInt(z + rz));
+      int result_t = strToInt(z + rz);
+      if (i % 2 == 0) {
+        if (isPrime(result_t)) {
+          number_ou = number_ou + 1;
+        }
+        printf("O:root is o;\n");
+      } else {
+        if (isPrime(result_t)) {
+          number_ju = number_ju + 1;
+        }
+        printf("O:root is j;\n");
+      }
+      if (isPrime(result_t)) {
+        printf("Number:%d, is\n", result_t);
+      } else {
+        printf("Number:%d, no\n", result_t);
+      }
     } else {
       for (int j = 1; j <= 9; j++) {
         std::string z = std::to_string(i);
         std::string rz = z;
-        reverse(rz.begin(), z.begin());
+        reverse(rz.begin(), rz.end());
         std::string zj = std::to_string(j);
         result.push_back(strToInt(z + zj + rz));
+        int result_t = strToInt(z + zj + rz);
+        if (i % 2 == 0) {
+          if (isPrime(result_t)) {
+            number_ou = number_ou + 1;
+          }
+          printf("J:root is o;\n");
+        } else {
+          if (isPrime(result_t)) {
+            number_ju = number_ju + 1;
+          }
+          printf("J:root is j;\n");
+        }
+        if (isPrime(result_t)) {
+          printf("Number:%d, is\n", result_t);
+        } else {
+          printf("Number:%d, no\n", result_t);
+        }
       }
     }
   }
